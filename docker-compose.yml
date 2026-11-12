@@ -1,0 +1,63 @@
+# The site and its Cloudflare tunnel. Nothing is published on a host port; the only way in is the tunnel.
+#
+#   scripts/deploy.sh                      build, start, print the address
+#   docker compose --profile named down    take the site offline
+#
+# With a .env file that sets TUNNEL_TOKEN (see README), the site runs on earlythesis.com
+# through a named tunnel. Without it, use the temporary quick tunnel instead:
+#   docker compose --profile quick up -d --build app quicktunnel
+#
+# Hardening: both containers run as non-root users with no Linux capabilities, read-only
+# filesystems and memory/process limits. The web server sits on an internal network with
+# no route out: it can only be reached by the tunnel, and it cannot reach anything itself.
+name: what-ai
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  pids_limit: 100
+
+services:
+  app:
+    <<: *hardened
+    build:
+      context: .
+      args:
+        # Set by scripts/deploy.sh so the social preview image has a full address.
+        SITE_URL: ${SITE_URL:-}
+    mem_limit: 128m
+    tmpfs:
+      - /tmp:size=16m
+    networks: [inside]
+
+  # Named tunnel "what-ai": a fixed address on your own domain. earlythesis.com and www point at it
+  # in Cloudflare DNS. Its token lives only in .env (ignored by git).
+  tunnel:
+    <<: *hardened
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --url http://app:8080
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    mem_limit: 256m
+    networks: [inside, outside]
+    depends_on: [app]
+    profiles: ["named"]
+
+  # Quick tunnel: no account, no domain, a random address that changes on every restart.
+  quicktunnel:
+    <<: *hardened
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://app:8080
+    mem_limit: 256m
+    networks: [inside, outside]
+    depends_on: [app]
+    profiles: ["quick"]
+
+networks:
+  # No internet and no host access: only the tunnel can talk to the web server.
+  inside:
+    internal: true
+  # The tunnel's own way out to Cloudflare.
+  outside: {}

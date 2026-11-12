@@ -1,0 +1,1600 @@
+:root {
+  --bg: #060914;
+  --ink: #f3ede2;
+  --ink-soft: rgba(243, 237, 226, 0.8);
+  --line: rgba(243, 237, 226, 0.22);
+  --cool: #8fb8ff;
+  --warm: #ffb469;
+  --serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pad: 22px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: var(--cool);
+}
+
+:focus-visible {
+  outline: 2px solid var(--warm);
+  outline-offset: 3px;
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(6, 9, 20, 0.94) 0%, rgba(6, 9, 20, 0.7) 26%, rgba(6, 9, 20, 0) 52%),
+    radial-gradient(ellipse at 50% 32%, rgba(6, 9, 20, 0) 35%, rgba(3, 5, 12, 0.7) 100%);
+}
+
+/* Top bar */
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(8px + env(safe-area-inset-top)) calc(var(--pad) - 8px) 0 var(--pad);
+  pointer-events: none;
+}
+
+.topbar > * {
+  pointer-events: auto;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  min-height: 44px;
+  padding: 0;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: rgba(6, 9, 20, 0.55);
+}
+
+.chip:hover {
+  border-color: rgba(243, 237, 226, 0.5);
+}
+
+/* Chapter list: a drop-down sheet on phones, a quiet rail on big screens */
+.chapters {
+  position: absolute;
+  z-index: 30;
+  top: calc(60px + env(safe-area-inset-top));
+  right: calc(var(--pad) - 8px);
+  width: min(320px, calc(100vw - 28px));
+  max-height: calc(100dvh - 90px);
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #0b1020;
+  display: none;
+}
+
+.chapters.open {
+  display: block;
+}
+
+.chapters ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chapter-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.chapter-link:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.chapter-link:not(:disabled):hover {
+  background: rgba(243, 237, 226, 0.07);
+}
+
+.chapter-link .dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-soft);
+}
+
+.chapter-link[aria-current] .dot {
+  background: var(--warm);
+  border-color: var(--warm);
+  box-shadow: 0 0 12px var(--warm);
+}
+
+.soon-tag {
+  margin-left: 6px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  cursor: default;
+}
+
+/* Text and buttons */
+.panel {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 var(--pad) calc(20px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.panel a,
+.panel button,
+.panel input,
+.panel label {
+  pointer-events: auto;
+}
+
+.copy {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.kicker {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cool);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 380;
+  font-size: clamp(30px, 8.2vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1.hero {
+  font-size: clamp(34px, 9.4vw, 52px);
+}
+
+.body {
+  margin: 14px 0 0;
+  max-width: 36em;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  min-height: 50px;
+}
+
+.primary {
+  min-height: 50px;
+  padding: 0 30px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.primary:hover {
+  background: #fff;
+}
+
+/* The first button on the site: quiet, warm, with an arrow that leans forward */
+.begin {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 54px;
+  padding: 0 7px 0 26px;
+  border: 1px solid rgba(255, 180, 105, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 180, 105, 0.06);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.begin-arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--warm);
+  color: var(--bg);
+  font-size: 18px;
+  letter-spacing: 0;
+  transition: transform 0.3s;
+}
+
+.begin:hover,
+.begin:focus-visible {
+  border-color: var(--warm);
+  background: rgba(255, 180, 105, 0.12);
+  box-shadow: 0 0 32px rgba(255, 180, 105, 0.22);
+}
+
+.begin:hover .begin-arrow {
+  transform: translateX(3px);
+}
+
+.ghost {
+  flex: none;
+  width: 50px;
+  height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.ghost:hover {
+  border-color: rgba(243, 237, 226, 0.5);
+}
+
+.soon {
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.ticks {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.tick {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(243, 237, 226, 0.25);
+}
+
+.tick.on {
+  background: var(--ink);
+}
+
+
+.credit-line {
+  max-width: 34em;
+  margin: 18px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(243, 237, 226, 0.66);
+}
+
+.credit-line a {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 180, 105, 0.7);
+  text-underline-offset: 3px;
+}
+
+.credit-line a:hover {
+  text-decoration-color: var(--warm);
+}
+
+/* Compute slider */
+.slider {
+  display: block;
+  margin-top: 10px;
+  max-width: 420px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cool);
+}
+
+.slider-hint {
+  color: rgba(243, 237, 226, 0.62);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.slider input {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 46px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, rgba(143, 184, 255, 0.35), var(--cool));
+}
+
+.slider input::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, rgba(143, 184, 255, 0.35), var(--cool));
+}
+
+.slider input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -12px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 6px rgba(143, 184, 255, 0.22), 0 0 22px rgba(143, 184, 255, 0.8);
+}
+
+.slider input::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 6px rgba(143, 184, 255, 0.22), 0 0 22px rgba(143, 184, 255, 0.8);
+}
+
+/* Chapter 1: the scaling-law chart under the slider */
+.scaling {
+  max-width: 420px;
+  margin: 4px 0 0;
+}
+
+.scaling svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.scaling .axis {
+  stroke: rgba(243, 237, 226, 0.35);
+  stroke-width: 1;
+}
+
+.scaling .run {
+  fill: none;
+  stroke: rgba(143, 184, 255, 0.35);
+  stroke-width: 1;
+}
+
+.scaling .law {
+  stroke: var(--warm);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+}
+
+.scaling .dot {
+  fill: var(--ink);
+  filter: drop-shadow(0 0 6px rgba(143, 184, 255, 0.9));
+}
+
+.scaling .tick {
+  fill: rgba(243, 237, 226, 0.6);
+  font-size: 10px;
+}
+
+.scaling figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(243, 237, 226, 0.66);
+}
+
+/* Wheel */
+.spin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 14px;
+}
+
+.spin-button {
+  border-color: var(--warm);
+  color: var(--warm);
+}
+
+.spin-count {
+  font-size: 13px;
+  color: rgba(243, 237, 226, 0.7);
+}
+
+/* Words pinned onto the 3D scene */
+.labels {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.pin-center > * {
+  transform: translate(-50%, -50%);
+}
+
+.pin-left > * {
+  transform: translateY(-50%);
+}
+
+.pin-right > * {
+  transform: translateY(-50%);
+}
+
+.pin-start > * {
+  transform: translateY(-50%);
+}
+
+.pin-end > * {
+  transform: translate(-100%, -50%);
+}
+
+.pin-center-above > * {
+  transform: translate(-50%, -100%);
+}
+
+.pin-center-below > * {
+  transform: translate(-50%, 0);
+}
+
+.pin-above > * {
+  transform: translate(-50%, calc(-100% - 8px));
+}
+
+.pin-below > * {
+  transform: translate(-50%, 8px);
+}
+
+.station {
+  width: max-content;
+  max-width: 104px;
+  padding: 6px 10px;
+  border: 1px solid rgba(243, 237, 226, 0.16);
+  border-radius: 12px;
+  background: rgba(6, 9, 20, 0.78);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+  animation: fade 0.9s 0.7s both;
+}
+
+.station-0 {
+  color: var(--cool);
+}
+
+.station-2 {
+  color: var(--warm);
+}
+
+/* Chapter 2: flowchart words, answer words, and the guessing game */
+.flow-label {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  color: #e4ddcf;
+  animation: fade 0.9s 0.9s both;
+}
+
+.net-word {
+  padding: 4px 9px;
+  border: 1px solid rgba(243, 237, 226, 0.16);
+  border-radius: 10px;
+  background: rgba(6, 9, 20, 0.78);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: rgba(243, 237, 226, 0.75);
+  transition: color 0.3s, border-color 0.3s;
+  animation: fade 0.6s both;
+}
+
+.net-word.wrong {
+  color: #ff9a82;
+  border-color: #ff8266;
+  text-decoration: line-through;
+}
+
+.net-word.right {
+  color: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 18px rgba(143, 184, 255, 0.7);
+}
+
+.game {
+  margin-top: 14px;
+}
+
+.sentence {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.game-count {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cool);
+}
+
+.blank {
+  display: inline-block;
+  min-width: 3.4em;
+  padding: 0 6px;
+  border-bottom: 2px solid var(--ink-soft);
+  text-align: center;
+}
+
+.blank.wrong {
+  color: #ff9a82;
+  border-color: #ff8266;
+  text-decoration: line-through;
+}
+
+.blank.right {
+  color: #fff;
+  border-color: var(--cool);
+  text-shadow: 0 0 16px rgba(143, 184, 255, 0.9);
+}
+
+.game-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 10px;
+}
+
+.game-button {
+  border-color: var(--warm);
+  color: var(--warm);
+}
+
+.game-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.game-status {
+  flex: 1 1 150px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(243, 237, 226, 0.75);
+}
+
+/* Chapter 3: touchable text fragments and the line they reveal */
+.frag {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
+.frag-mark {
+  display: grid;
+  gap: 3px;
+  padding: 7px 6px;
+  border-radius: 8px;
+  transition: background 0.25s, box-shadow 0.25s;
+  animation: beckon 3.2s ease-in-out infinite;
+}
+
+.frag-mark i {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--warm);
+  box-shadow: 0 0 8px var(--warm);
+}
+
+.frag-mark i:nth-child(2) {
+  width: 11px;
+}
+
+.frag-mark i:nth-child(3) {
+  width: 14px;
+}
+
+.frag.on .frag-mark,
+.frag:hover .frag-mark {
+  background: rgba(255, 180, 105, 0.2);
+  box-shadow: 0 0 0 1px var(--warm), 0 0 22px rgba(255, 180, 105, 0.6);
+  animation: none;
+}
+
+@keyframes beckon {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.reader {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  min-height: 86px;
+  margin-top: 14px;
+  padding-left: 12px;
+  border-left: 2px solid var(--warm);
+}
+
+.reader-kind {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warm);
+}
+
+.reader-text {
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.reader-gloss,
+.reader-hint {
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(243, 237, 226, 0.75);
+}
+
+/* Chapter 4: language buttons and the cards at the end of each beam */
+.langs {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.lang-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lang-button {
+  font-size: 15px;
+}
+
+.lang-button.seen {
+  border-color: var(--cool);
+}
+
+.lang-button[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: rgba(243, 237, 226, 0.14);
+}
+
+.lang-button:disabled {
+  cursor: default;
+}
+
+.lang-card {
+  width: max-content;
+  max-width: 132px;
+  padding: 6px 9px;
+  border: 1px solid rgba(243, 237, 226, 0.16);
+  border-radius: 12px;
+  background: rgba(6, 9, 20, 0.8);
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  color: rgba(243, 237, 226, 0.7);
+  transition: color 0.3s, border-color 0.3s;
+  animation: fade 0.9s 0.6s both;
+}
+
+.lang-card.lit {
+  color: var(--ink);
+  border-color: var(--cool);
+}
+
+.lang-question,
+.lang-answer {
+  display: block;
+}
+
+.lang-answer {
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  animation: fade 0.6s both;
+}
+
+.concept-label {
+  padding: 4px 10px;
+  border: 1px solid var(--warm);
+  border-radius: 10px;
+  background: rgba(6, 9, 20, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #ffe2c0;
+  animation: fade 0.6s both;
+}
+
+/* Chapter 5: emotion words, chat bubbles */
+.emotion-label {
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  background: rgba(6, 9, 20, 0.82);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: fade 0.8s 0.5s both;
+}
+
+.alarm-state {
+  color: #ff9a7d;
+  animation-delay: 0s;
+}
+
+.bubble {
+  width: max-content;
+  max-width: 236px;
+  padding: 9px 13px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.3;
+  animation: fade 0.6s both;
+}
+
+.bubble.user {
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+  background: rgba(30, 36, 58, 0.92);
+}
+
+.bubble.reply {
+  border-bottom-right-radius: 4px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.fineprint {
+  margin: 10px 0 0;
+  max-width: 36em;
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(243, 237, 226, 0.66);
+}
+
+.replay {
+  margin-top: 10px;
+}
+
+.replay .chip:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Chapter 6: words on the figures, the story cards, the switch */
+.body-label {
+  width: max-content;
+  max-width: 96px;
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(6, 9, 20, 0.84);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  animation: fade 0.8s 0.9s both;
+}
+
+.body-label.shortcut {
+  color: var(--warm);
+  border-color: var(--warm);
+}
+
+.body-label.bad {
+  color: #ffa48c;
+  border-color: #c2452c;
+  animation-delay: 0.3s;
+}
+
+.body-label.late-1 {
+  animation-delay: 2.9s;
+}
+
+.body-label.late-2 {
+  animation-delay: 2.2s;
+}
+
+.story-card {
+  width: max-content;
+  max-width: 140px;
+  padding: 7px 10px;
+  border: 1px solid var(--cool);
+  border-radius: 12px;
+  background: rgba(6, 9, 20, 0.86);
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  animation: fade 0.8s 0.6s both;
+}
+
+.story-card.bad {
+  border-color: #c2452c;
+  color: #ffc3b2;
+}
+
+.story-card.off {
+  border-style: dashed;
+  border-color: var(--line);
+  color: rgba(243, 237, 226, 0.6);
+  font-family: var(--sans);
+  font-size: 12px;
+}
+
+.toggle {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.switch-track {
+  flex: none;
+  width: 54px;
+  height: 30px;
+  padding: 3px;
+  border-radius: 15px;
+  background: rgba(243, 237, 226, 0.22);
+  transition: background 0.25s;
+}
+
+.switch-knob {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.25s;
+}
+
+.switch[aria-checked="true"] .switch-track {
+  background: var(--warm);
+}
+
+.switch[aria-checked="true"] .switch-knob {
+  transform: translateX(24px);
+}
+
+/* Chapter 7: bar names and the three renamed kinds of work */
+.radar-label {
+  width: max-content;
+  max-width: 96px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: rgba(243, 237, 226, 0.88);
+  transition: color 0.6s, opacity 0.6s;
+  animation: fade 0.8s 0.8s both;
+}
+
+/* On a phone there is only room for a few names. The three warm spokes are named in the text instead. */
+.radar-label:not(.key),
+.radar-label.human {
+  display: none;
+}
+
+.radar-label.warm {
+  color: var(--warm);
+  font-size: 12px;
+}
+
+.radar-label.dim {
+  opacity: 0.4;
+}
+
+.pin-end .radar-label {
+  text-align: right;
+}
+
+.pin-center-above .radar-label,
+.pin-center-below .radar-label {
+  text-align: center;
+}
+
+/* Phones only: names the three warm spokes under the chart. */
+.radar-callout {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--warm);
+  animation: fade 0.8s 0.6s both;
+}
+
+.radar-legend {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  white-space: nowrap;
+  color: rgba(243, 237, 226, 0.75);
+  animation: fade 0.8s 1.2s both;
+}
+
+.radar-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+
+.legend-theory::before {
+  background: rgba(143, 184, 255, 0.45);
+  border: 1px solid #8fb8ff;
+}
+
+.legend-used::before {
+  background: #f3ede2;
+}
+
+.rename {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 5px 10px 6px;
+  border-radius: 12px;
+  background: rgba(6, 9, 20, 0.72);
+  text-align: center;
+  animation: fade 0.9s both;
+}
+
+.rename-0 {
+  animation-delay: 3.2s;
+}
+
+.rename-1 {
+  animation-delay: 3.9s;
+}
+
+.rename-2 {
+  animation-delay: 4.6s;
+}
+
+.rename-old {
+  font-size: 11px;
+  white-space: nowrap;
+  text-decoration: line-through;
+  color: rgba(243, 237, 226, 0.6);
+}
+
+.rename-now {
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.1;
+  color: #ffd9a8;
+}
+
+/* Chapter 8: the visitor's sentence and the ending */
+.story {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.story-form {
+  display: flex;
+  gap: 8px;
+}
+
+.story-input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(6, 9, 20, 0.7);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  pointer-events: auto;
+}
+
+.story-input::placeholder {
+  color: rgba(243, 237, 226, 0.5);
+}
+
+.story-add {
+  border-color: var(--warm);
+  color: var(--warm);
+}
+
+.story-add:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.story-kept {
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(243, 237, 226, 0.75);
+}
+
+.story-kept q {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.end-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+a.primary,
+a.chip {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+a.chip {
+  color: var(--ink);
+}
+
+.end-share {
+  min-width: 112px;
+  padding: 0 26px;
+}
+
+.story-rise {
+  width: max-content;
+  max-width: min(280px, 76vw);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.25;
+  text-align: center;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: rgba(6, 9, 20, 0.55);
+  color: #ffe9cf;
+  text-shadow: 0 0 18px rgba(255, 180, 105, 0.9);
+  animation: join 3.4s cubic-bezier(0.3, 0, 0.3, 1) both;
+}
+
+.pin-center > .story-rise {
+  transform: translate(-50%, -50%);
+}
+
+@keyframes join {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 70px) scale(1);
+  }
+  18% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+}
+
+@keyframes glimpse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+}
+
+/* A soft fade between scenes, used instead of flying particles when less motion is wanted */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  pointer-events: none;
+  animation: unveil 0.7s both;
+}
+
+@keyframes unveil {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Sources sheet */
+.sources {
+  width: 100%;
+  max-width: 560px;
+  max-height: 82dvh;
+  margin: auto auto 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 22px 22px 0 0;
+  background: #0b1020;
+  color: var(--ink);
+  overflow: auto;
+}
+
+.sources::backdrop {
+  background: rgba(2, 3, 8, 0.66);
+}
+
+.sources-inner {
+  padding: 26px var(--pad) calc(26px + env(safe-area-inset-bottom));
+}
+
+.sources h2 {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+}
+
+.sources h2:not(:first-child) {
+  margin-top: 28px;
+}
+
+.sources p,
+.sources li {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.sources ul {
+  padding-left: 18px;
+}
+
+.sources li {
+  margin-bottom: 10px;
+}
+
+.sources-chapter {
+  margin-top: 0;
+  font-size: 12px !important;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cool) !important;
+}
+
+.note {
+  padding-left: 12px;
+  border-left: 2px solid var(--warm);
+}
+
+.sources .primary {
+  margin-top: 14px;
+}
+
+.fallback {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8%;
+  width: 100%;
+  height: 48%;
+}
+
+/* Side by side layout: landscape tablets, laptops, desktops */
+@media (orientation: landscape) and (min-width: 640px) {
+  :root {
+    --pad: clamp(24px, 5vw, 80px);
+  }
+
+  .vignette {
+    background:
+      linear-gradient(to right, rgba(6, 9, 20, 0.82) 0%, rgba(6, 9, 20, 0.35) 34%, rgba(6, 9, 20, 0) 52%),
+      radial-gradient(ellipse at 70% 50%, rgba(6, 9, 20, 0) 40%, rgba(3, 5, 12, 0.7) 100%);
+  }
+
+  .panel {
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    width: min(540px, 43vw);
+    padding: 0 0 0 var(--pad);
+    transform: translateY(-50%);
+  }
+
+  h1 {
+    font-size: clamp(30px, 4vw, 60px);
+  }
+
+  h1.hero {
+    font-size: clamp(34px, 4.3vw, 64px);
+  }
+
+  .body {
+    font-size: clamp(16px, 1.35vw, 20px);
+  }
+
+  .ticks {
+    margin-left: 8px;
+  }
+
+  .sources {
+    margin: auto;
+    border-bottom: 1px solid var(--line);
+    border-radius: 22px;
+  }
+
+  .fallback {
+    left: 44%;
+    right: auto;
+    top: 10%;
+    width: 54%;
+    height: 80%;
+  }
+
+  .station {
+    max-width: 150px;
+    font-size: 13px;
+  }
+
+  .flow-label {
+    font-size: clamp(12px, 1.2vw, 16px);
+  }
+
+  .lang-card {
+    max-width: 240px;
+    font-size: 14px;
+  }
+
+  .lang-answer {
+    font-size: 19px;
+  }
+
+  .concept-label {
+    font-size: 14px;
+  }
+
+  .emotion-label,
+  .body-label {
+    font-size: 13px;
+  }
+
+  .body-label {
+    max-width: 150px;
+  }
+
+  .bubble {
+    max-width: 300px;
+    font-size: 16px;
+  }
+
+  .story-card {
+    max-width: 210px;
+    font-size: 17px;
+  }
+
+  .radar-label {
+    max-width: 150px;
+    font-size: 13px;
+  }
+
+  .radar-label:not(.key),
+  .radar-label.human {
+    display: block;
+  }
+
+  .radar-label.warm {
+    font-size: 15px;
+  }
+
+  .radar-legend {
+    font-size: 13px;
+  }
+
+  .radar-callout {
+    display: none;
+  }
+
+  .rename-old {
+    font-size: 13px;
+  }
+
+  .rename-now {
+    font-size: 28px;
+  }
+
+  .story-rise {
+    font-size: 24px;
+    max-width: 420px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  h1 {
+    font-size: 28px;
+  }
+
+  h1.hero {
+    font-size: 32px;
+  }
+
+  .body {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  .controls {
+    margin-top: 12px;
+  }
+}
+
+/* Chapter rail on large screens */
+@media (min-width: 1000px) and (min-height: 600px) {
+  .menu-toggle,
+  .scrim {
+    display: none;
+  }
+
+  .chapters,
+  .chapters.open {
+    display: block;
+    top: 50%;
+    right: 14px;
+    width: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    transform: translateY(-50%);
+    overflow: visible;
+  }
+
+  .chapter-link {
+    position: relative;
+    justify-content: center;
+    width: 44px;
+    min-height: 40px;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .chapter-link:not(:disabled):hover {
+    background: none;
+  }
+
+  /* Names float to the left of the dots and never block the scene behind them. */
+  .chapter-name {
+    position: absolute;
+    right: 100%;
+    opacity: 0;
+    transform: translateX(6px);
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgba(6, 9, 20, 0.85);
+    pointer-events: none;
+  }
+
+  .chapters:hover .chapter-name,
+  .chapter-link:focus-visible .chapter-name {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Gentle fades only, for people who ask for less motion */
+.reduced .copy {
+  animation: fade 0.5s both;
+}
+
+.reduced .frag-mark {
+  animation: none;
+}
+
+.reduced .rename {
+  animation-delay: 0.2s;
+}
+
+.reduced .body-label {
+  animation-delay: 0.2s;
+}
+
+.reduced .story-rise {
+  animation: glimpse 3s both;
+}
+
+.reduced .stage canvas {
+  animation: fade 0.6s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy,
+  .station {
+    animation: fade 0.5s both;
+  }
+
+  .frag-mark {
+    animation: none;
+  }
+
+  .switch-track,
+  .switch-knob,
+  .begin,
+  .begin-arrow {
+    transition: none;
+  }
+
+  .chapter-name {
+    transition: none;
+  }
+}

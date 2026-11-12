@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.vite/
+coverage/
+
+# Notes that stay on the server: the original brief (has a full name) and the talk transcript (not ours to publish)
+docs/private/
