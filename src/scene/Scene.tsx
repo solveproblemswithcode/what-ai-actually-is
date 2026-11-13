@@ -164,8 +164,10 @@ export default function Scene(props: SceneProps) {
 /** Where on the screen the scene should sit, leaving room for the text. */
 function layoutFor(width: number, height: number, tallPanel = false) {
   const desktop = width >= 640 && width > height;
-  if (desktop) return { fracW: 0.54, fracH: 0.78, shiftX: 0.2, shiftY: 0 };
-  return tallPanel ? { fracW: 0.8, fracH: 0.32, shiftX: 0, shiftY: 0.28 } : { fracW: 0.94, fracH: 0.46, shiftX: 0, shiftY: 0.19 };
+  if (desktop) return { fracW: 0.54, fracH: 0.78, shiftX: 0.2, shiftY: 0, phone: false };
+  return tallPanel
+    ? { fracW: 0.8, fracH: 0.32, shiftX: 0, shiftY: 0.28, phone: true }
+    : { fracW: 0.94, fracH: 0.46, shiftX: 0, shiftY: 0.19, phone: true };
 }
 
 function Rig({ spec, reduced }: { spec: SceneSpec; reduced: boolean }) {
@@ -176,7 +178,7 @@ function Rig({ spec, reduced }: { spec: SceneSpec; reduced: boolean }) {
   const aspect = size.width / size.height;
   const target = Math.max(
     spec.fitW / (lay.fracW * 2 * TAN_HALF * aspect),
-    spec.fitH / (lay.fracH * 2 * TAN_HALF),
+    (lay.phone ? spec.phoneFitH ?? spec.fitH : spec.fitH) / (lay.fracH * 2 * TAN_HALF),
   );
 
   useEffect(() => {

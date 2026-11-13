@@ -87,30 +87,31 @@ export const EMOTION_SPOTS = [
  * Our own calculation from the same public data, weighted by how many people do each job:
  * theory from Eloundou et al. (2023, "beta"), actual use from Anthropic's Economic Index.
  * Clockwise from the top, in the same order as the original chart.
+ * `short` is the one-line name shown on phones, where the full names would overlap.
  */
 export const RADAR = [
-  { label: "Management", theory: 0.47, used: 0.13 },
-  { label: "Business & finance", theory: 0.54, used: 0.28 },
-  { label: "Computer & math", theory: 0.75, used: 0.36, key: true },
-  { label: "Architecture & engineering", theory: 0.52, used: 0.05 },
-  { label: "Life & social sciences", theory: 0.45, used: 0.1 },
-  { label: "Social services", theory: 0.32, used: 0.04 },
-  { label: "Legal", theory: 0.46, used: 0.2, key: true },
-  { label: "Education & library", theory: 0.37, used: 0.18 },
-  { label: "Arts & media", theory: 0.49, used: 0.19 },
-  { label: "Healthcare practitioners", theory: 0.35, used: 0.05 },
-  { label: "Healthcare support", theory: 0.21, used: 0.02 },
-  { label: "Protective service", theory: 0.24, used: 0.03 },
-  { label: "Food & serving", theory: 0.14, used: 0.01, key: true, human: true },
-  { label: "Grounds maintenance", theory: 0.03, used: 0.01, key: true, human: true },
-  { label: "Personal care", theory: 0.18, used: 0.02, key: true, human: true },
-  { label: "Sales", theory: 0.41, used: 0.27 },
-  { label: "Office & admin", theory: 0.6, used: 0.34, key: true },
-  { label: "Agriculture", theory: 0.14, used: 0.01 },
-  { label: "Construction", theory: 0.12, used: 0.01 },
-  { label: "Installation & repair", theory: 0.16, used: 0.02 },
-  { label: "Production", theory: 0.17, used: 0.01 },
-  { label: "Transportation", theory: 0.18, used: 0 },
+  { label: "Management", short: "Management", theory: 0.47, used: 0.13 },
+  { label: "Business & finance", short: "Business", theory: 0.54, used: 0.28 },
+  { label: "Computer & math", short: "Computing", theory: 0.75, used: 0.36, key: true },
+  { label: "Architecture & engineering", short: "Engineering", theory: 0.52, used: 0.05 },
+  { label: "Life & social sciences", short: "Sciences", theory: 0.45, used: 0.1 },
+  { label: "Social services", short: "Social work", theory: 0.32, used: 0.04 },
+  { label: "Legal", short: "Legal", theory: 0.46, used: 0.2, key: true },
+  { label: "Education & library", short: "Education", theory: 0.37, used: 0.18 },
+  { label: "Arts & media", short: "Arts & media", theory: 0.49, used: 0.19 },
+  { label: "Healthcare practitioners", short: "Healthcare", theory: 0.35, used: 0.05 },
+  { label: "Healthcare support", short: "Health aides", theory: 0.21, used: 0.02 },
+  { label: "Protective service", short: "Protective", theory: 0.24, used: 0.03 },
+  { label: "Food & serving", short: "Food", theory: 0.14, used: 0.01, key: true, human: true },
+  { label: "Grounds maintenance", short: "Grounds", theory: 0.03, used: 0.01, key: true, human: true },
+  { label: "Personal care", short: "Personal care", theory: 0.18, used: 0.02, key: true, human: true },
+  { label: "Sales", short: "Sales", theory: 0.41, used: 0.27 },
+  { label: "Office & admin", short: "Office", theory: 0.6, used: 0.34, key: true },
+  { label: "Agriculture", short: "Farming", theory: 0.14, used: 0.01 },
+  { label: "Construction", short: "Building", theory: 0.12, used: 0.01 },
+  { label: "Installation & repair", short: "Repair", theory: 0.16, used: 0.02 },
+  { label: "Production", short: "Production", theory: 0.17, used: 0.01 },
+  { label: "Transportation", short: "Transport", theory: 0.18, used: 0 },
 ];
 /** World units for a value of 1, and how far out the spokes and labels sit. */
 export const RADAR_SCALE = 2.6;

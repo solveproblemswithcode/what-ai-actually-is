@@ -1024,8 +1024,8 @@ h1.hero {
 /* Chapter 7: bar names and the three renamed kinds of work */
 .radar-label {
   width: max-content;
-  max-width: 96px;
-  font-size: 11px;
+  white-space: nowrap;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1.15;
   color: rgba(243, 237, 226, 0.88);
@@ -1033,15 +1033,13 @@ h1.hero {
   animation: fade 0.8s 0.8s both;
 }
 
-/* On a phone there is only room for a few names. The three warm spokes are named in the text instead. */
-.radar-label:not(.key),
-.radar-label.human {
-  display: none;
-}
-
 .radar-label.warm {
   color: var(--warm);
-  font-size: 12px;
+}
+
+/* Phones show the short one-line names; wider screens show the full ones. */
+.radar-full {
+  display: none;
 }
 
 .radar-label.dim {
@@ -1055,15 +1053,6 @@ h1.hero {
 .pin-center-above .radar-label,
 .pin-center-below .radar-label {
   text-align: center;
-}
-
-/* Phones only: names the three warm spokes under the chart. */
-.radar-callout {
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--warm);
-  animation: fade 0.8s 0.6s both;
 }
 
 .radar-legend {
@@ -1445,12 +1434,16 @@ a.chip {
 
   .radar-label {
     max-width: 150px;
+    white-space: normal;
     font-size: 13px;
   }
 
-  .radar-label:not(.key),
-  .radar-label.human {
-    display: block;
+  .radar-full {
+    display: inline;
+  }
+
+  .radar-short {
+    display: none;
   }
 
   .radar-label.warm {
@@ -1459,10 +1452,6 @@ a.chip {
 
   .radar-legend {
     font-size: 13px;
-  }
-
-  .radar-callout {
-    display: none;
   }
 
   .rename-old {

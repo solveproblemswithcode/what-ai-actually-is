@@ -36,6 +36,8 @@ export type SceneSpec = {
   cy?: number;
   /** On a phone, the text panel is taller in this step, so the scene sits smaller and higher. */
   tallPanel?: boolean;
+  /** On a phone, a taller fitH, for scenes whose labels need more room above and below. */
+  phoneFitH?: number;
   /** How much the camera drifts around. */
   orbit: number;
   /** Share of cloud particles tinted amber ("money"). */
@@ -226,14 +228,14 @@ export const SPECS: Record<SceneKey, SceneSpec> = {
   },
   bars: {
     shape: "bars", lines: "radar", drift: 0.02, shake: false, autoSweep: 0,
-    fitW: 7.5, fitH: 6.2, orbit: 0, warm: 0, autoSpin: 0, wheelDrag: false,
+    fitW: 7.5, fitH: 6.2, phoneFitH: 7.3, orbit: 0, warm: 0, autoSpin: 0, wheelDrag: false,
     structure: () => 1,
     density: () => 1,
     brightness: () => 0.55,
   },
   bars3: {
     shape: "bars", lines: "radar", drift: 0.02, shake: false, autoSweep: 0,
-    fitW: 7.5, fitH: 6.2, orbit: 0, warm: 0, autoSpin: 0, wheelDrag: false,
+    fitW: 7.5, fitH: 6.2, phoneFitH: 7.3, orbit: 0, warm: 0, autoSpin: 0, wheelDrag: false,
     structure: () => 1,
     density: () => 1,
     brightness: () => 0.55,

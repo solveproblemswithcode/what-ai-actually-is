@@ -233,19 +233,15 @@ export default function SceneLabels({ sceneKey, net, beams, fragment, onFragment
           const cls = `radar-label${r.key ? " key" : ""}${r.human ? " human" : ""}${focus && r.human ? " warm" : ""}${focus && !r.human ? " dim" : ""}`;
           return (
             <Pin key={r.label} anchor={radarLabelSide(k)} x={Math.cos(radarAngle(k)) * RADAR_LABEL} y={Math.sin(radarAngle(k)) * RADAR_LABEL}>
-              <div className={cls}>{r.label}</div>
+              <div className={cls}>
+                <span className="radar-full">{r.label}</span>
+                <span className="radar-short">{r.short}</span>
+              </div>
             </Pin>
           );
         })}
-      {sceneKey === "bars3" && (
-        <Pin anchor="below" x={0} y={-2.3}>
-          <div className="radar-callout" aria-hidden="true">
-            Personal care · Grounds maintenance · Food &amp; serving
-          </div>
-        </Pin>
-      )}
       {sceneKey === "bars" && (
-        <Pin anchor="below" x={0} y={-2.6}>
+        <Pin anchor="below" x={0} y={-2.55}>
           <div className="radar-legend" aria-hidden="true">
             <span className="legend-theory">could do in theory</span>
             <span className="legend-used">actually used for</span>
